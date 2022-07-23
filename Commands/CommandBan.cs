@@ -107,7 +107,7 @@ namespace Pustalorc.GlobalBan.Commands
                 steamId = (CSteamID) pId;
                 characterName = pId.ToString();
             }
-
+            // NEW PR INCOMING
             var server = await pilRepo.GetCurrentServerAsync();
             await m_GlobalBanRepository.BanPlayerAsync(server?.Id ?? 0, steamId.m_SteamID, ip, hwid, duration, adminId,
                 reason);
