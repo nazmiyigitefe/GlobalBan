@@ -39,6 +39,7 @@ webhooks:
     title: "A player was unbbanned from the server."
     description: "{Player} was unbanned from the server!"
     unbanned_by: "Unbanned by:"
+    by_external: "External method, most likely plugin (Steam 64 ID: {ExternalId})"
   kick:
     title: "A player was kicked from the server."
     description: "{Player} was kicked from the server for {Reason}!"
