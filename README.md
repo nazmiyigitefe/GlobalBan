@@ -39,7 +39,7 @@ The database currently stores the following values:
 - The Date when the player has been banned (TimeOfBan)
 - If this ban no longer counts no matter of the time remaining (IsUnbanned)
 
-##Installation
+## Installation
 
  - `openmod install Pustalorc.GlobalBan`
  - Configure the plugin.
