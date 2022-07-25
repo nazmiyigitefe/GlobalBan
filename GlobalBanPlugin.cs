@@ -2,6 +2,7 @@
 // ReSharper disable AnnotateNotNullTypeMember
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using OpenMod.Core.Users;
 using OpenMod.API.Plugins;
 using OpenMod.API.Users;
 using OpenMod.Unturned.Plugins;
+using OpenMod.Unturned.Users;
 using Pustalorc.GlobalBan.API.Enums;
 using Pustalorc.GlobalBan.API.External;
 using Pustalorc.GlobalBan.API.Services;
@@ -21,6 +24,7 @@ using Pustalorc.GlobalBan.Database;
 using Pustalorc.PlayerInfoLib.Unturned;
 using Pustalorc.PlayerInfoLib.Unturned.API.Services;
 using SDG.Unturned;
+using Steamworks;
 using Math = System.Math;
 
 [assembly:
@@ -35,6 +39,7 @@ namespace Pustalorc.GlobalBan
         private readonly IStringLocalizer m_StringLocalizer;
         private readonly ILogger<GlobalBanPlugin> m_Logger;
         private readonly IUserManager m_UserManager;
+        private readonly IUnturnedUserDirectory m_UnturnedUserDirectory;
         private readonly GlobalBanDbContext m_GlobalBanDbContext;
         private readonly IGlobalBanRepository m_GlobalBanRepository;
         private readonly IPluginAccessor<PlayerInfoLibrary> m_PilPlugin;
@@ -44,6 +49,7 @@ namespace Pustalorc.GlobalBan
             IStringLocalizer stringLocalizer,
             ILogger<GlobalBanPlugin> logger,
             IUserManager userManager,
+            IUnturnedUserDirectory unturnedUserDirectory,
             IGlobalBanRepository globalBanRepository, IPluginAccessor<PlayerInfoLibrary> pilPlugin, 
             GlobalBanDbContext globalBanDbContext,
             IServiceProvider serviceProvider) : base(serviceProvider)
@@ -52,6 +58,7 @@ namespace Pustalorc.GlobalBan
             m_StringLocalizer = stringLocalizer;
             m_Logger = logger;
             m_UserManager = userManager;
+            m_UnturnedUserDirectory = unturnedUserDirectory;
             m_GlobalBanDbContext = globalBanDbContext;
             m_GlobalBanRepository = globalBanRepository;
             m_PilPlugin = pilPlugin;
@@ -61,6 +68,8 @@ namespace Pustalorc.GlobalBan
         {
             // Event nelson added to check if someone is banned yourself. Uses correct Banned removal if isBanned is returned to true.
             Provider.onCheckBanStatusWithHWID += CheckBanned;
+            // Event nelson added to interupt vanilla bans. This is used for integration with other plugins
+            Provider.onBanPlayerRequestedV2 += RequestBan;
 
             await m_GlobalBanDbContext.Database.MigrateAsync();
 
@@ -70,6 +79,7 @@ namespace Pustalorc.GlobalBan
         protected override UniTask OnUnloadAsync()
         {
             Provider.onCheckBanStatusWithHWID -= CheckBanned;
+            Provider.onBanPlayerRequestedV2 -= RequestBan;
 
             m_Logger.LogInformation("Global Ban for Unturned by Pustalorc was unloaded correctly.");
 
@@ -135,6 +145,60 @@ namespace Pustalorc.GlobalBan
                 default:
                     return;
             }
+        }
+        
+        private void RequestBan(CSteamID instigator, CSteamID playerToBan, uint ipToBan, IEnumerable<byte[]> hwidsToBan,
+            ref string reason, ref uint duration, ref bool shouldVanillaBan)
+        {
+            shouldVanillaBan = false;
+
+            // Get config option
+            var shouldIpAndHwidBan = m_Configuration.GetSection("commands:ban:ban_hwid_and_ip").Get<bool>();
+
+            // Try to find user to be banned
+            var pilRepo = m_PilPlugin.Instance.LifetimeScope.Resolve<IPlayerInfoRepository>();
+
+            var user = m_UnturnedUserDirectory.FindUser(playerToBan);
+            var pData = pilRepo.FindPlayer(playerToBan.ToString(), UserSearchMode.FindById);
+
+            var adminId = instigator.m_SteamID;
+            string characterName;
+            var ip = 0u;
+            var hwid = "";
+
+            if (shouldIpAndHwidBan)
+            {
+                ip = ipToBan;
+                if (hwidsToBan != null)
+                    hwid = string.Join("", hwidsToBan.First()); // Obsolete - Should Implement Multiple HWIDs
+            }
+
+            if (user is UnturnedUser player)
+            {
+                characterName = player.DisplayName;
+            }
+            else if (pData != null)
+            {
+                characterName = pData.CharacterName;
+            }
+            else
+            {
+                characterName = playerToBan.ToString();
+            }
+
+            var server = pilRepo.GetCurrentServer();
+            m_GlobalBanRepository.BanPlayer(server?.Id ?? 0, playerToBan.m_SteamID, ip, hwid, duration, adminId,
+                reason);
+
+            Provider.ban(playerToBan, reason, duration);
+
+            var translated = m_StringLocalizer["commands:ban:banned", new { Player = characterName, Reason = reason }];
+            m_UserManager.BroadcastAsync(translated);
+            m_Logger.LogInformation(translated);
+
+            var externalAdmin = m_StringLocalizer["webhooks:ban:by_external", new { ExternalId = adminId.ToString() }];
+            SendWebhook(WebhookType.Ban, playerToBan.ToString(), externalAdmin, reason,
+                playerToBan.ToString(), duration);
         }
 
         public async Task SendWebhookAsync(WebhookType webhookType, string playerName, string adminName, string reason,

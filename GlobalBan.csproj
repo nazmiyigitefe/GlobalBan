@@ -29,9 +29,9 @@ Fix session termination issues.</PackageReleaseNotes>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="morelinq" Version="3.3.2" />
-    <PackageReference Include="OpenMod.EntityFrameworkCore.MySql" Version="3.1.3" />
-    <PackageReference Include="OpenMod.Unturned" Version="3.1.3" />
-	<PackageReference Include="OpenMod.Unturned.Redist" Version="3.21.21" />
+    <PackageReference Include="OpenMod.EntityFrameworkCore.MySql" Version="3.3.2" />
+    <PackageReference Include="OpenMod.Unturned" Version="3.3.2" />
+	<PackageReference Include="OpenMod.Unturned.Redist" Version="3.22.13" />
 	<PackageReference Include="OpenMod.UnityEngine.Redist" Version="2019.4.10" />
     <PackageReference Include="Legacy2CPSWorkaround" Version="1.0.0">
       <PrivateAssets>All</PrivateAssets>
@@ -40,8 +40,8 @@ Fix session termination issues.</PackageReleaseNotes>
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Pustalorc.PlayerInfoLib.Unturned" Version="3.3.0" />
-    <PackageReference Include="RestSharp" Version="106.12.0" />
+    <PackageReference Include="Pustalorc.PlayerInfoLib.Unturned" Version="3.6.1" />
+    <PackageReference Include="RestSharp" Version="108.0.1" />
   </ItemGroup>
 
   <ItemGroup>
