@@ -36,7 +36,6 @@ namespace Pustalorc.GlobalBan.API.External
         {
             var client = new RestClient(url);
             var request = new RestRequest("", Method.Post);
-            request.AddParameter("Application/Json", ParameterType.RequestBody);
             var jsonToSend = JsonConvert.SerializeObject(message);
 
             request.AddParameter("application/json; charset=utf-8", jsonToSend, ParameterType.RequestBody);
