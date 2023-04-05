@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
@@ -65,7 +65,7 @@ namespace Pustalorc.GlobalBan.Commands
 
                 var steamId = player?.SteamId ?? (CSteamID) pData.Id;
                 var characterName = player?.DisplayName ?? pData.CharacterName;
-                var hwid = player != null ? string.Join("", player.Player.SteamPlayer.playerID.hwid) : pData.Hwid;
+                var hwid = player != null ?string.Join("", player.Player.SteamPlayer.playerID.GetHwids().ElementAt(0)) : pData.Hwid;
                 var ip = player != null ? player.Player.SteamPlayer.getIPv4AddressOrZero() : (uint) pData.Ip;
                 var idBans = await m_GlobalBanRepository.FindBansInEffectAsync(steamId.ToString(), BanSearchMode.Id);
                 var ipBans = await m_GlobalBanRepository.FindBansInEffectAsync(ip.ToString(), BanSearchMode.Ip);

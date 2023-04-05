@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Cysharp.Threading.Tasks;
@@ -89,7 +90,7 @@ namespace Pustalorc.GlobalBan.Commands
                 if (shouldIpAndHwidBan)
                 {
                     ip = player.Player.SteamPlayer.getIPv4AddressOrZero();
-                    hwid = string.Join("", player.Player.SteamPlayer.playerID.hwid);
+                    hwid = string.Join("", player.Player.SteamPlayer.playerID.GetHwids().ElementAt(0));
                 }
             }
             else if (pData != null)

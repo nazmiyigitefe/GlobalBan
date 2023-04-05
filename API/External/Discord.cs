@@ -1,4 +1,4 @@
-﻿// ReSharper disable AnnotateNotNullParameter
+// ReSharper disable AnnotateNotNullParameter
 // ReSharper disable AnnotateNotNullTypeMember
 
 using System.Threading.Tasks;
@@ -17,7 +17,7 @@ namespace Pustalorc.GlobalBan.API.External
         public static async Task SendWebhookPostAsync(string url, object message)
         {
             var client = new RestClient(url);
-            var request = new RestRequest(Method.POST);
+            var request = new RestRequest("", Method.Post);
 
             var jsonToSend = JsonConvert.SerializeObject(message);
 
@@ -35,8 +35,7 @@ namespace Pustalorc.GlobalBan.API.External
         public static void SendWebhookPost(string url, object message)
         {
             var client = new RestClient(url);
-            var request = new RestRequest(Method.POST);
-
+            var request = new RestRequest("", Method.Post);
             var jsonToSend = JsonConvert.SerializeObject(message);
 
             request.AddParameter("application/json; charset=utf-8", jsonToSend, ParameterType.RequestBody);
