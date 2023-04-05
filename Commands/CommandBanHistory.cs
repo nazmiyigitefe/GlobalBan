@@ -21,7 +21,7 @@ namespace Pustalorc.GlobalBan.Commands
     [Command("banhistory")]
     [CommandSyntax("[player]")]
     [CommandDescription("Lists the latest 4 bans of a player, or self if none is specified.")]
-    [RegisterCommandPermission("other", Description = "Permission to see the balance of other players")]
+    [RegisterCommandPermission("other", Description = "Permission to see the bans of other players")]
     public class CommandBanHistory : Command
     {
         private readonly IStringLocalizer m_StringLocalizer;
