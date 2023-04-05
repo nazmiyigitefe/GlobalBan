@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Cysharp.Threading.Tasks;
@@ -80,7 +81,7 @@ namespace Pustalorc.GlobalBan.Commands
                 steamId = player.SteamId;
                 characterName = player.DisplayName;
                 ip = player.Player.SteamPlayer.getIPv4AddressOrZero();
-                hwid = string.Join("", player.Player.SteamPlayer.playerID.hwid);
+                hwid = string.Join("", player.Player.SteamPlayer.playerID.GetHwids().ElementAt(0));
 
                 await UniTask.SwitchToMainThread();
                 player.Player.Player.life.askDamage(101, Vector3.up * 101f, EDeathCause.KILL, ELimb.SKULL, (CSteamID) adminId,
