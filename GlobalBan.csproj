@@ -16,9 +16,7 @@
     <PackageProjectUrl>https://github.com/Pustalorc/GlobalBan</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Pustalorc/GlobalBan</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
-    <PackageReleaseNotes>Update to latest OpenMod version.
-Fix IP retrieval issues.
-Fix session termination issues.</PackageReleaseNotes>
+    <PackageReleaseNotes>Update to latest OpenMod and Unturned version.</PackageReleaseNotes>
     <AssemblyName>Pustalorc.GlobalBan</AssemblyName>
     <UserSecretsId>072ee54b-9ca3-4daf-a982-5a79d6814f1d</UserSecretsId>
   </PropertyGroup>
