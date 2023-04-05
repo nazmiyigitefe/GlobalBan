@@ -8,7 +8,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateNugetPackage>true</GenerateNugetPackage>
     <Product>Global Ban</Product>
-    <Version>3.6.3</Version>
+    <Version>3.6.4</Version>
     <Authors>Pustalorc, Nuage</Authors>
     <PackageId>Pustalorc.GlobalBan</PackageId>
     <Description>Manages bans through OpenMod.Unturned with MySql</Description>
@@ -39,7 +39,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Pustalorc.PlayerInfoLib.Unturned" Version="3.6.3" />
+    <PackageReference Include="Pustalorc.PlayerInfoLib.Unturned" Version="3.6.4" />
     <PackageReference Include="RestSharp" Version="110.1.0" />
   </ItemGroup>
 
