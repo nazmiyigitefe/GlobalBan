@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net481</TargetFramework>
+    <TargetFramework>net461</TargetFramework>
     <PackageLicenseExpression>EUPL-1.2</PackageLicenseExpression>
 	<PackageTags>openmod openmod-plugin unturned</PackageTags>
 	<RootNamespace>Pustalorc.GlobalBan</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateNugetPackage>true</GenerateNugetPackage>
     <Product>Global Ban</Product>
-    <Version>3.6.4</Version>
+    <Version>3.6.5</Version>
     <Authors>Pustalorc, Nuage</Authors>
     <PackageId>Pustalorc.GlobalBan</PackageId>
     <Description>Manages bans through OpenMod.Unturned with MySql</Description>
@@ -28,9 +28,9 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="morelinq" Version="3.4.2" />
-    <PackageReference Include="OpenMod.EntityFrameworkCore.MySql" Version="3.3.10" />
-    <PackageReference Include="OpenMod.Unturned" Version="3.3.10" />
-	<PackageReference Include="OpenMod.Unturned.Redist" Version="3.23.4" />
+    <PackageReference Include="OpenMod.EntityFrameworkCore.MySql" Version="3.3.13" />
+    <PackageReference Include="OpenMod.Unturned" Version="3.3.13" />
+	<PackageReference Include="OpenMod.Unturned.Redist" Version="3.23.5" />
 	<PackageReference Include="OpenMod.UnityEngine.Redist" Version="2020.3.38" />
     <PackageReference Include="Legacy2CPSWorkaround" Version="1.0.0">
       <PrivateAssets>All</PrivateAssets>
@@ -39,8 +39,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Pustalorc.PlayerInfoLib.Unturned" Version="3.6.4" />
-    <PackageReference Include="RestSharp" Version="110.1.0" />
+    <PackageReference Include="Pustalorc.PlayerInfoLib.Unturned" Version="3.6.6" />
+    <PackageReference Include="RestSharp" Version="110.2.0" />
   </ItemGroup>
 
   <ItemGroup>
