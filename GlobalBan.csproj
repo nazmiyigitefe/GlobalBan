@@ -8,7 +8,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateNugetPackage>true</GenerateNugetPackage>
     <Product>Global Ban</Product>
-    <Version>3.6.5</Version>
+    <Version>3.6.6</Version>
     <Authors>Pustalorc, Nuage</Authors>
     <PackageId>Pustalorc.GlobalBan</PackageId>
     <Description>Manages bans through OpenMod.Unturned with MySql</Description>
