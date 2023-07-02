@@ -50,7 +50,7 @@ namespace Pustalorc.GlobalBan
             ILogger<GlobalBanPlugin> logger,
             IUserManager userManager,
             IUnturnedUserDirectory unturnedUserDirectory,
-            IGlobalBanRepository globalBanRepository, IPluginAccessor<PlayerInfoLibrary> pilPlugin, 
+            IGlobalBanRepository globalBanRepository, IPluginAccessor<PlayerInfoLibrary> pilPlugin,
             GlobalBanDbContext globalBanDbContext,
             IServiceProvider serviceProvider) : base(serviceProvider)
         {
@@ -90,7 +90,7 @@ namespace Pustalorc.GlobalBan
             ref uint banRemainingDuration)
         {
             var steamId = playerId.steamID.m_SteamID;
-            var hwid = string.Join("", playerId.hwid);
+            var hwid = string.Join("", playerId.GetHwids().ElementAt(0));
             var server = m_PilPlugin.Instance.LifetimeScope.Resolve<IPlayerInfoRepository>().GetCurrentServer();
 
             switch (m_GlobalBanRepository.CheckBan(steamId, remoteIp, hwid))
@@ -107,7 +107,7 @@ namespace Pustalorc.GlobalBan
                     banReason = ban.Reason;
                     var remainingDuration = ban.TimeOfBan.AddSeconds(ban.Duration).Subtract(DateTime.Now).TotalSeconds;
                     banRemainingDuration =
-                        (uint) Math.Min(uint.MaxValue,
+                        (uint)Math.Min(uint.MaxValue,
                             remainingDuration); // Makes sure that the maximum number sent back is uint.MaxValue, even if remaining duration is higher (it would overflow otherwise and give the wrong duration)
 
                     if (!bans.Any(k => k.Hwid.Equals(hwid) && k.Ip == remoteIp))
@@ -116,7 +116,7 @@ namespace Pustalorc.GlobalBan
                             0, m_StringLocalizer["internal:new_ip_or_hwid_ban_reason"]);
 
                         var translation = m_StringLocalizer["commands:ban:banned",
-                            new {Player = playerId.characterName, Reason = banReason}];
+                            new { Player = playerId.characterName, Reason = banReason }];
                         m_UserManager.BroadcastAsync(translation);
                         m_Logger.LogInformation(translation);
                         SendWebhook(WebhookType.BanEvading, playerId.characterName,
@@ -135,7 +135,7 @@ namespace Pustalorc.GlobalBan
                         banReason);
 
                     var translated = m_StringLocalizer["commands:ban:banned",
-                        new {Player = playerId.characterName, Reason = banReason}];
+                        new { Player = playerId.characterName, Reason = banReason }];
                     m_UserManager.BroadcastAsync(translated);
                     m_Logger.LogInformation(translated);
                     SendWebhook(WebhookType.BanEvading, playerId.characterName,
@@ -146,7 +146,7 @@ namespace Pustalorc.GlobalBan
                     return;
             }
         }
-        
+
         private void RequestBan(CSteamID instigator, CSteamID playerToBan, uint ipToBan, IEnumerable<byte[]> hwidsToBan,
             ref string reason, ref uint duration, ref bool shouldVanillaBan)
         {
@@ -205,9 +205,9 @@ namespace Pustalorc.GlobalBan
             string playerId, uint duration)
         {
             await Discord.SendWebhookPostAsync(m_Configuration[$"webhooks:{webhookType.ToString().ToLower()}:url"],
-                Discord.BuildDiscordEmbed(m_StringLocalizer[$"webhooks:{webhookType.ToString().ToLower()}:title"],
+                Discord.BuildDiscordMessageWithEmbed(m_StringLocalizer[$"webhooks:{webhookType.ToString().ToLower()}:title"],
                     m_StringLocalizer[$"webhooks:{webhookType.ToString().ToLower()}:description",
-                        new {Player = playerName, Reason = reason}], m_StringLocalizer["webhooks:global:displayname"],
+                        new { Player = playerName, Reason = reason }], m_StringLocalizer["webhooks:global:displayname"],
                     m_Configuration["webhooks:image_url"],
                     m_Configuration.GetSection($"webhooks:{webhookType.ToString().ToLower()}:color").Get<int>(),
                     BuildFields(webhookType, adminName, reason, playerId, duration)));
@@ -217,9 +217,9 @@ namespace Pustalorc.GlobalBan
             string playerId, uint duration)
         {
             Discord.SendWebhookPost(m_Configuration[$"webhooks:{webhookType.ToString().ToLower()}:url"],
-                Discord.BuildDiscordEmbed(m_StringLocalizer[$"webhooks:{webhookType.ToString().ToLower()}:title"],
+                Discord.BuildDiscordMessageWithEmbed(m_StringLocalizer[$"webhooks:{webhookType.ToString().ToLower()}:title"],
                     m_StringLocalizer[$"webhooks:{webhookType.ToString().ToLower()}:description",
-                        new {Player = playerName, Reason = reason}], m_StringLocalizer["webhooks:global:displayname"],
+                        new { Player = playerName, Reason = reason }], m_StringLocalizer["webhooks:global:displayname"],
                     m_Configuration["webhooks:image_url"],
                     m_Configuration.GetSection($"webhooks:{webhookType.ToString().ToLower()}:color").Get<int>(),
                     BuildFields(webhookType, adminName, reason, playerId, duration)));
