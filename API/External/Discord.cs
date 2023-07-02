@@ -21,8 +21,7 @@ namespace Pustalorc.GlobalBan.API.External
 
             var jsonToSend = JsonConvert.SerializeObject(message);
 
-            request.AddParameter("application/json; charset=utf-8", jsonToSend, ParameterType.RequestBody);
-            request.RequestFormat = DataFormat.Json;
+            request.AddJsonBody(jsonToSend);
 
             await client.ExecutePostAsync(request);
         }
@@ -38,14 +37,13 @@ namespace Pustalorc.GlobalBan.API.External
             var request = new RestRequest("", Method.Post);
             var jsonToSend = JsonConvert.SerializeObject(message);
 
-            request.AddParameter("application/json; charset=utf-8", jsonToSend, ParameterType.RequestBody);
-            request.RequestFormat = DataFormat.Json;
+            request.AddJsonBody(jsonToSend);
 
             client.Execute(request);
         }
 
         /// <summary>
-        /// Builds a basic discord embed message.
+        /// Builds a basic discord message with an embed.
         /// </summary>
         /// <param name="title">The message for the embed.</param>
         /// <param name="description">The description to be shown in the embed.</param>
@@ -54,7 +52,7 @@ namespace Pustalorc.GlobalBan.API.External
         /// <param name="embedColour">The colour to be used in the embed.</param>
         /// <param name="fields">The extra fields in the message of the embed.</param>
         /// <returns>JSON Styled object to then be sent to discord by a webhook.</returns>
-        public static object BuildDiscordEmbed(string title, string description, string username, string avatar,
+        public static object BuildDiscordMessageWithEmbed(string title, string description, string username, string avatar,
             int embedColour, object[] fields)
         {
             var embMsg = new
@@ -64,14 +62,13 @@ namespace Pustalorc.GlobalBan.API.External
                 color = embedColour,
                 fields
             };
-            var msg = new
+
+            return new
             {
-                embeds = new[] {embMsg},
+                embeds = new[] { embMsg },
                 username,
                 avatar_url = avatar
             };
-
-            return msg;
         }
 
         /// <summary>
