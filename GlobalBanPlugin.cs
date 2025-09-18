@@ -12,7 +12,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
-using OpenMod.Core.Users;
 using OpenMod.API.Plugins;
 using OpenMod.API.Users;
 using OpenMod.Unturned.Plugins;
